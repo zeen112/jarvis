@@ -4,21 +4,19 @@ const { spawn } = require('child_process');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// 1. Web Server untuk Lulus Health Check di Back4App
+// 1. Web Server HTTP agar Back4App LULUS Health Check
 app.get('/', (req, res) => {
-  res.send('9Router & Hermes Bot is Running!');
+  res.send('9Router Cloud Server is Active!');
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[Express] Server health check aktif di port ${PORT}`);
+  console.log(`[Express] Health check server running on port ${PORT}`);
 });
 
-// 2. Jalankan 9Router
-console.log('[9Router] Menjalankan 9Router...');
+// 2. Jalankan 9Router Service
+console.log('[9Router] Starting 9Router process...');
 const routerProc = spawn('npx', ['9router', '--host', '0.0.0.0', '--port', '20128'], { stdio: 'inherit' });
 
-// 3. Jalankan Hermes Bot setelah jeda 5 detik
-setTimeout(() => {
-  console.log('[Hermes] Menjalankan Hermes Bot Telegram...');
-  const hermesProc = spawn('hermes', ['telegram', 'start'], { stdio: 'inherit' });
-}, 5000);
+routerProc.on('error', (err) => {
+  console.error('[9Router Error]:', err);
+});
